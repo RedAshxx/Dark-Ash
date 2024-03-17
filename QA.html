@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Game by Ash</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="images/Ash.png">
+</head>
+<body background="images/background.jpg">
+
+<h1 style="color: white; position:relative; top: 490px; left: 70px;">Quiz Game by Ash</h1>
+
+<p style="color: white; position:relative; top: 510px; left: 90px;">Enter the number of questions:</p>
+
+<input style="position:relative; top: 520px; left: 90px;" type="number" id="numQuestions">
+<button style="position:relative; top: 520px; left: 90px;" onclick="startQuiz()">Start Quiz</button>
+
+<div style="color: white; position: relative; left: 25px;" id="quiz"></div>
+
+<script>
+var questionsAnswers = JSON.parse(localStorage.getItem("questionsAnswers")) || [];
+var currentQuestionIndex = 0;
+
+function startQuiz() {
+    var numQuestions = document.getElementById("numQuestions").value;
+
+    for (var i = 0; i < numQuestions; i++) {
+        var question = prompt("Enter question " + (i+1));
+        var answer = prompt("Enter the answer to question " + (i+1));
+        saveQuestionAnswer(question, answer);
+    }
+
+    askQuestion();
+}
+
+function askQuestion() {
+    if (currentQuestionIndex < questionsAnswers.length) {
+        var question = questionsAnswers[currentQuestionIndex].question;
+        speak(question);
+        setTimeout(function() {
+            askAnswer(question);
+        }, 1000); // Wait for 1 second after asking the question
+    } else {
+        alert("End of quiz.");
+        showHistory();
+    }
+}
+
+function askAnswer(question) {
+    var correctAnswer = questionsAnswers[currentQuestionIndex].answer;
+
+    var userAnswer = prompt(question);
+
+    if (userAnswer === null) {
+        return; // User clicked cancel, do nothing
+    }
+
+    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        updateScoreadd();
+        speak("Correct!");
+        playSound("correct.mp3");
+    } else {
+        updateScoreminus();
+        speak("Incorrect. The correct answer is: " + correctAnswer);
+        playSound("incorrect.mp3");
+    }
+
+    currentQuestionIndex++;
+    setTimeout(askQuestion, 1000); // Wait for 1 second before asking the next question
+}
+
+function playSound(soundFile) {
+    var audio = new Audio(soundFile);
+    audio.play();
+}
+
+function speak(text) {
+    var synth = window.speechSynthesis;
+    var utterThis = new SpeechSynthesisUtterance(text);
+    synth.speak(utterThis);
+}
+
+function updateScoreadd() {
+    let score = parseInt(localStorage.getItem("score")) || 0;
+    score++;
+    localStorage.setItem("score", score);
+    alert("Your current score: " + score);
+}
+
+function updateScoreminus() {
+    let score = parseInt(localStorage.getItem("score")) || 0;
+    score--;
+    localStorage.setItem("score", score);
+    alert("Your current score: " + score);
+}
+
+function updateScore() {
+    let score = parseInt(localStorage.getItem("score")) || 0;
+    localStorage.setItem("score", score);
+    alert("Your Current Score is " + score);
+}
+
+function eraseScore() {
+    localStorage.setItem("score", 0);
+    alert("Your current score: 0");
+}
+
+function saveQuestionAnswer(question, answer) {
+    questionsAnswers.push({question: question, answer: answer});
+    localStorage.setItem("questionsAnswers", JSON.stringify(questionsAnswers));
+}
+
+function showHistory() {
+    var quizContent = "";
+    questionsAnswers.forEach(function(item, index) {
+        quizContent += "<p>Question " + (index+1) + ": " + item.question + " - Answer: " + item.answer + "</p>";
+    });
+    document.getElementById("quiz").innerHTML = quizContent;
+    var reAnswerButton = "<button onclick='reAnswerQuestions()'>Re-Answer Questions</button>";
+    var deleteHistoryButton = "<button onclick='deleteHistory()'>Delete History</button>";
+    var showHistoryButton = "<button onclick='showHistory()'>Show History</button>";
+    document.getElementById("quiz").innerHTML += reAnswerButton;
+    document.getElementById("quiz").innerHTML += deleteHistoryButton;
+    document.getElementById("quiz").innerHTML += showHistoryButton;
+}
+
+function reAnswerQuestions() {
+    currentQuestionIndex = 0;
+    askQuestion();
+}
+
+function deleteHistory() {
+    localStorage.removeItem("questionsAnswers");
+    questionsAnswers = [];
+    document.getElementById("quiz").innerHTML = "";
+}
+
+</script>
+
+<button style="position:relative; top: 535px; left: 90px;" onclick="eraseScore()">Reset Score</button>
+<button style="position:relative; top: 570px; left: 10px;" onclick="updateScore()">Show Score</button>
+<button style="position:relative; top: 600px; left: 10px;" onclick="showHistory()">Show History</button>
+
+</body>
+</html>
