@@ -17,7 +17,9 @@
 <input style="position:relative; top: 23vh; left: 10vw;" type="number" id="numQuestions">
 <button style="position:relative; top: 23vh; left: 10vw;" onclick="startQuiz()">Start Quiz</button>
 
-<div style="color: white; position: relative; left: 2vw; top: 5vh;" id="quiz"></div>
+<div style="color: white; position: relative; left: 2vw; top: 5vh;" id="quiz">
+    <button onclick="addQuestion()">Add Question and Answer</button>
+</div>
 
 <script>
 var questionsAnswers = JSON.parse(localStorage.getItem("questionsAnswers")) || [];
@@ -79,7 +81,7 @@ function playSound(soundFile) {
 function speak(text) {
     var synth = window.speechSynthesis;
     var utterThis = new SpeechSynthesisUtterance(text);
-    utterThis.rate = 2.0; // Increase voice speed (2x faster)
+    utterThis.rate = 1.0; // Adjust the rate (speed) of speech, 1.0 is the default rate
     synth.speak(utterThis);
 }
 
@@ -180,6 +182,18 @@ function shuffleArray(array) {
     return array;
 }
 
+function addQuestion() {
+    var question = prompt("Enter the new question:");
+    var answer = prompt("Enter the correct answer to the question:");
+
+    // Check if both question and answer are provided
+    if (question && answer) {
+        saveQuestionAnswer(question, answer);
+        alert("Question and answer added successfully!");
+    } else {
+        alert("Please provide both question and answer.");
+    }
+}
 </script>
 
 <button style="position:relative; top: 23vh; left: 10vw;" onclick="eraseScore()">Reset Score</button>
