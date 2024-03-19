@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Game by Ash</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game by Ash</title>
 
-<link rel="stylesheet" href="style.css">
-<link rel="icon" href="images/Ash.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/Ash.png">
 </head>
 <body background="images/background.jpg">
 
-<h1 style="color: white; position:relative; top: 490px; left: 70px;">Quiz Game by Ash</h1>
+<h1 style="color: white; position:relative; top: 20vh; left: 10vw;">Quiz Game by Ash</h1>
 
-<p style="color: white; position:relative; top: 510px; left: 90px;">Enter the number of questions:</p>
+<p style="color: white; position:relative; top: 22vh; left: 10vw;">Enter the number of questions:</p>
 
-<input style="position:relative; top: 520px; left: 90px;" type="number" id="numQuestions">
-<button style="position:relative; top: 520px; left: 90px;" onclick="startQuiz()">Start Quiz</button>
+<input style="position:relative; top: 23vh; left: 10vw;" type="number" id="numQuestions">
+<button style="position:relative; top: 23vh; left: 10vw;" onclick="startQuiz()">Start Quiz</button>
 
-<div style="color: white; position: relative; left: 25px;" id="quiz"></div>
+<div style="color: white; position: relative; left: 2vw; top: 5vh;" id="quiz">
+    <button onclick="addQuestion()">Add Question and Answer</button>
+</div>
 
 <script>
 var questionsAnswers = JSON.parse(localStorage.getItem("questionsAnswers")) || [];
@@ -137,11 +139,23 @@ function deleteHistory() {
     document.getElementById("quiz").innerHTML = "";
 }
 
+function addQuestion() {
+    var question = prompt("Enter the new question:");
+    var answer = prompt("Enter the answer to the question:");
+
+    // Check if both question and answer are provided
+    if (question && answer) {
+        saveQuestionAnswer(question, answer);
+        alert("Question and answer added successfully!");
+    } else {
+        alert("Please provide both question and answer.");
+    }
+}
 </script>
 
-<button style="position:relative; top: 535px; left: 90px;" onclick="eraseScore()">Reset Score</button>
-<button style="position:relative; top: 570px; left: 10px;" onclick="updateScore()">Show Score</button>
-<button style="position:relative; top: 600px; left: 10px;" onclick="showHistory()">Show History</button>
+<button style="position:relative; top: 23vh; left: 10vw;" onclick="eraseScore()">Reset Score</button>
+<button style="position:relative; top: 24vh; left: 10vw;" onclick="updateScore()">Show Score</button>
+<button style="position:relative; top: 25vh; left: 10vw;" onclick="showHistory()">Show History</button>
 
 </body>
 </html>
