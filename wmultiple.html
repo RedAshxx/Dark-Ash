@@ -194,11 +194,99 @@ function addQuestion() {
         alert("Please provide both question and answer.");
     }
 }
+
+
+function askQuestion() {
+    if (currentQuestionIndex < questionsAnswers.length) {
+        var question = questionsAnswers[currentQuestionIndex].question;
+        var choices = generateRandomChoices(questionsAnswers[currentQuestionIndex].answer);
+
+        speak(question); // Speak the question first
+
+        setTimeout(function() {
+            var userAnswer = promptMultipleChoice(question, choices);
+
+            if (userAnswer === null) {
+                return; // User clicked cancel, do nothing
+            }
+
+            var correctAnswer = questionsAnswers[currentQuestionIndex].answer;
+
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                updateScoreadd();
+                playSound("correct.mp3");
+                speak("Correct!"); // Speak if the answer is correct
+            } else {
+                updateScoreminus();
+                playSound("incorrect.mp3");
+                speak("Incorrect. The correct answer is: " + correctAnswer); // Speak if the answer is incorrect
+            }
+
+            setTimeout(function() {
+                currentQuestionIndex++;
+                askQuestion(); // Ask the next question immediately
+                speak(questionsAnswers[currentQuestionIndex].question); // Speak the next question
+                alert("Next"); // Alert "Next" after each question and answer
+            }, 1000); // Wait for 1 second after user answer
+        }, 3000); // Wait for 3 seconds before presenting the question after speaking
+    } else {
+        alert("End of quiz.");
+        showHistory();
+    }
+}
+
+
+
+// Function to separate questions and answers and transfer them to the new page
+function transferToNewPage() {
+    var questions = [];
+    var answers = [];
+    questionsAnswers.forEach(function(item) {
+        questions.push(item.question);
+        answers.push(item.answer);
+    });
+    localStorage.setItem("questions", JSON.stringify(questions));
+    localStorage.setItem("answers", JSON.stringify(answers));
+    window.location.href = "newpage.html"; // Redirect to the new page
+}
+
+
+
+
+function editCurrentQuestion() {
+    var question = prompt("Enter the edited question:");
+    var answer = prompt("Enter the corrected answer:");
+
+    // Check if both question and answer are provided
+    if (question && answer) {
+        questionsAnswers[currentQuestionIndex].question = question;
+        questionsAnswers[currentQuestionIndex].answer = answer;
+        localStorage.setItem("questionsAnswers", JSON.stringify(questionsAnswers));
+        alert("Question and answer edited successfully!");
+    } else {
+        alert("Please provide both question and answer.");
+    }
+}
+
+
+
+
+
+
+
+
+
 </script>
 
 <button style="position:relative; top: 23vh; left: 10vw;" onclick="eraseScore()">Reset Score</button>
 <button style="position:relative; top: 24vh; left: 10vw;" onclick="updateScore()">Show Score</button>
 <button style="position:relative; top: 25vh; left: 10vw;" onclick="showHistory()">Show History</button>
+<button style="position:relative; top: 26vh; left: 10vw;"   onclick="transferToNewPage()">Transfer Questions and Answers</button>
+<button style="position:relative; top: 30vh; left: 20vw;"         onclick="editCurrentQuestion()">Edit Current Question and Answer</button>
+
+
+
+
 
 </body>
 </html>
