@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz History</title>
+</head>
+<body>
+    <h1>Quiz History</h1>
+    <div id="history"></div>
+
+    <button onclick="reAnswerQuestion()">Re-Answer Question</button>
+
+<script> 
+
+document.addEventListener("DOMContentLoaded", function() {
+    var questions = JSON.parse(localStorage.getItem("questions")) || [];
+    var answers = JSON.parse(localStorage.getItem("answers")) || [];
+    var historyContent = "";
+
+    for (var i = 0; i < questions.length; i++) {
+        historyContent += "<p><strong>Question:</strong> " + questions[i] + "</p>";
+        historyContent += "<p><strong>Answer:</strong> " + answers[i] + "</p><br>";
+    }
+
+    document.getElementById("history").innerHTML = historyContent;
+});
+
+function reAnswerQuestion() {
+    var questions = JSON.parse(localStorage.getItem("questions")) || [];
+    var answers = JSON.parse(localStorage.getItem("answers")) || [];
+
+    // Prompt the user to select a question
+    var index = prompt("Enter the question number you want to re-answer (starting from 1 to " + questions.length + "):");
+
+    // Check if the index is valid
+    index = parseInt(index);
+    if (isNaN(index) || index < 1 || index > questions.length) {
+        alert("Invalid question number!");
+        return;
+    }
+
+    // Adjust index to array index
+    index--;
+
+    var question = questions[index];
+
+    // Prompt the user to re-answer the question
+    var newAnswer = prompt("Re-answer the question: " + question);
+
+    if (newAnswer !== null) {
+        answers[index] = newAnswer;
+        localStorage.setItem("answers", JSON.stringify(answers));
+        alert("Answer updated successfully!");
+        updateHistory(); // Update the displayed history with the new answer
+    }
+}
+
+function updateHistory() {
+    var questions = JSON.parse(localStorage.getItem("questions")) || [];
+    var answers = JSON.parse(localStorage.getItem("answers")) || [];
+    var historyContent = "";
+
+    for (var i = 0; i < questions.length; i++) {
+        historyContent += "<p><strong>Question:</strong> " + questions[i] + "</p>";
+        historyContent += "<p><strong>Answer:</strong> " + answers[i] + "</p><br>";
+    }
+
+    document.getElementById("history").innerHTML = historyContent;
+}
+
+</script>
+</body>
+</html>
