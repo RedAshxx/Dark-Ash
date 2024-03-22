@@ -17,7 +17,7 @@
 <input style="position:relative; top: 23vh; left: 10vw;" type="number" id="numQuestions">
 <button style="position:relative; top: 23vh; left: 10vw;" onclick="startQuiz()">Start Quiz</button>
 
-<div style="color: white; position: relative; left: 2vw; top: 5vh;" id="quiz">
+<div style="color: white; position: relative; left: 25vw; top: 35vh;" id="quiz">
     <button onclick="addQuestion()">Add Question and Answer</button>
 </div>
 
@@ -109,13 +109,9 @@ function showHistory() {
     questionsAnswers.forEach(function(item, index) {
         quizContent += "<p>Question " + (index+1) + ": " + item.question + " - Answer: " + item.answer + "</p>";
     });
-    document.getElementById("quiz").innerHTML = quizContent;
-    var reAnswerButton = "<button onclick='reAnswerQuestions()'>Re-Answer Questions</button>";
-    var deleteHistoryButton = "<button onclick='deleteHistory()'>Delete History</button>";
-    var showHistoryButton = "<button onclick='showHistory()'>Show History</button>";
-    document.getElementById("quiz").innerHTML += reAnswerButton;
-    document.getElementById("quiz").innerHTML += deleteHistoryButton;
-    document.getElementById("quiz").innerHTML += showHistoryButton;
+    
+    
+    
 }
 
 function reAnswerQuestions() {
@@ -271,6 +267,33 @@ function editCurrentQuestion() {
 
 
 
+function hideHistory() {
+    var addButton = "<button onclick='addQuestion()'>Add Question and Answer</button>"; // Add back the button to add question and answer
+    document.getElementById("quiz").innerHTML = addButton;
+}
+
+function eraseScore() {
+    localStorage.removeItem("score");
+    alert("Score reset successfully!");
+}
+
+function showScore() {
+    var score = parseInt(localStorage.getItem("score")) || 0;
+    alert("Your current score: " + score);
+}
+
+function decreaseScoreByAmount() {
+    var amount = parseInt(prompt("Enter the amount to subtract from your score:"));
+    if (isNaN(amount) || amount <= 0) {
+        alert("Invalid input. Please enter a valid positive number.");
+        return;
+    }
+    
+    var score = parseInt(localStorage.getItem("score")) || 0;
+    score -= amount;
+    localStorage.setItem("score", score);
+    alert("Your current score: " + score);
+}
 
 
 
@@ -279,11 +302,11 @@ function editCurrentQuestion() {
 </script>
 
 <button style="position:relative; top: 23vh; left: 10vw;" onclick="eraseScore()">Reset Score</button>
-<button style="position:relative; top: 24vh; left: 10vw;" onclick="updateScore()">Show Score</button>
-<button style="position:relative; top: 25vh; left: 10vw;" onclick="showHistory()">Show History</button>
+<button style="position:relative; top: 24vh; left: 10vw;" onclick="showScore()">Show Score</button>
 <button style="position:relative; top: 26vh; left: 10vw;"   onclick="transferToNewPage()">Transfer Questions and Answers</button>
 <button style="position:relative; top: 30vh; left: 20vw;"         onclick="editCurrentQuestion()">Edit Current Question and Answer</button>
-
+<button style="position:relative; top: 35vh; left: -20vw;"   onclick="deleteHistory()"          >delete all history</button>
+<button style="position:relative; top: 40vh; left: 20vw;"   onclick="decreaseScoreByAmount()"       >decrease your score</button>
 
 
 
