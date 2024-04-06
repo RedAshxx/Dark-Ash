@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -64,6 +64,11 @@ button:hover {
 </style>
 </head>
 <body background="images/background.jpg">
+
+  <button style="position:relative; top: 500px; left: 50px;" onclick="resetAllData()">Reset All Data</button>
+  <button style="position:relative; top: 500px; left: 40px;" onclick="editQuestionAnswer()">Edit Question & Answer</button>
+ 
+
 <div class="container">
   <h1 style="color: #fff;">Dark Ash Quiz Game</h1>
   <div style="color:#fff;" id="start">
@@ -76,6 +81,7 @@ button:hover {
     <button onclick="resetScore()">Reset Score</button>
     <button onclick="reAnswerQuestions()">Re-answer & Re-play</button>
     <button onclick="showScore()">Show Score</button>
+    <button onclick="addQuestionAnswer()">Add Question & Answer</button>
     <div id="score" style="display:none;  color: #fff;"></div>
   </div>
 </div>
@@ -232,24 +238,41 @@ function speak(text) {
   }
 }
 
+function resetAllData() {
+  localStorage.removeItem('definitions');
+  localStorage.removeItem('answers');
+  localStorage.removeItem('score'); // Remove score from local storage
+  currentQuestionIndex = 0;
+  definitions = [];
+  answers = [];
+  score = 0;
+  document.getElementById('score').textContent = ''; // Clear score display
+}
 
-function speak(text) {
-  if (isSpeechSupported) {
-    var words = text.split(' ').slice(0, 15).join(' '); // Limit to 15 words
-    var utterance = new SpeechSynthesisUtterance(words);
-    utterance.rate = 0.5;
-    synth.speak(utterance);
+function editQuestionAnswer() {
+  var index = parseInt(prompt('Enter the index of the question and answer you want to edit:'));
+  if (index >= 0 && index < definitions.length) {
+    var newDefinition = prompt('Enter the new question:');
+    var newAnswer = prompt('Enter the new answer:');
+    definitions[index] = newDefinition;
+    answers[index] = newAnswer;
+    localStorage.setItem('definitions', JSON.stringify(definitions));
+    localStorage.setItem('answers', JSON.stringify(answers));
+    alert('Question and answer updated successfully!');
   } else {
-    alert("Your device/browser doesn't support speech synthesis. Please enter your answer manually.");
+    alert('Invalid index. Please enter a valid index.');
   }
 }
 
-
-
-
-
-
-
+function addQuestionAnswer() {
+  var newDefinition = prompt('Enter the new question:');
+  var newAnswer = prompt('Enter the new answer:');
+  definitions.push(newDefinition);
+  answers.push(newAnswer);
+  localStorage.setItem('definitions', JSON.stringify(definitions));
+  localStorage.setItem('answers', JSON.stringify(answers));
+  alert('Question and answer added successfully!');
+}
 </script>
 </body>
 </html>
