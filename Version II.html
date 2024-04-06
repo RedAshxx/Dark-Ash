@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -54,6 +54,7 @@ button:hover {
 #feedback {
   margin-top: 20px;
   font-weight: bold;
+  color: #fff;
 }
 
 #score {
@@ -70,13 +71,9 @@ button:hover {
   </div>
   <div id="quiz" style="display:none;">
     <div style="color: #fff;" id="currentQuestion"></div>
-    <button onclick="editQuestion()">Edit Question</button> <!-- New button for editing question -->
-    <label for="answer" style="color: #fff;">Enter your answer:</label>
-    <input type="text" id="answer">
-    <button onclick="checkAnswer()">Submit Answer</button>
     <div id="feedback"></div>
     <button onclick="resetQuiz()">Reset Quiz</button>
-    <button onclick="resetScore()">Reset Score</button> <!-- New button for resetting score -->
+    <button onclick="resetScore()">Reset Score</button>
     <button onclick="reAnswerQuestions()">Re-answer & Re-play</button>
     <button onclick="showScore()">Show Score</button>
     <div id="score" style="display:none;  color: #fff;"></div>
@@ -120,9 +117,11 @@ function generateQuestions() {
 }
 
 function showNextQuestion() {
-  var question = generateQuestionFromDefinition(definitions[currentQuestionIndex]);
-  document.getElementById('currentQuestion').innerHTML = question; // Set innerHTML of div
+  var question = definitions[currentQuestionIndex];
+  var multipleChoiceQuestion = generateQuestionFromDefinition(question);
   speak(question); // Speak the question
+  var userAnswer = prompt(multipleChoiceQuestion); // Prompt user for answer within the alert box
+  checkAnswer(userAnswer);
 }
 
 function generateQuestionFromDefinition(definition) {
@@ -151,36 +150,22 @@ function generateQuestionFromDefinition(definition) {
   }
   options.sort(function() { return 0.5 - Math.random() });
   
-  var questionWithChoices = question + "<br>";
+  var questionWithChoices = question + "\n";
   for (var i = 0; i < options.length; i++) {
-    questionWithChoices += "<br>" + String.fromCharCode(65 + i) + ". " + options[i];
+    questionWithChoices += "\n" + String.fromCharCode(65 + i) + ". " + options[i];
   }
   
   return questionWithChoices;
 }
 
-function editQuestion() {
-  var newQuestion = prompt('Edit the question:', definitions[currentQuestionIndex]);
-  if (newQuestion !== null && newQuestion.trim() !== '') {
-    definitions[currentQuestionIndex] = newQuestion.trim();
-    showNextQuestion(); // Update the displayed question
-  }
-}
-
-function speak(text) {
-  if (isSpeechSupported) {
-    var utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.5;
-    synth.speak(utterance);
-  } else {
-    alert("Your device/browser doesn't support speech synthesis. Please enter your answer manually.");
-  }
-}
-
-function checkAnswer() {
-  var userAnswer = document.getElementById('answer').value.trim();
+function checkAnswer(userAnswer) {
   var correctAnswer = answers[currentQuestionIndex];
   var feedback = '';
+  if (userAnswer === null) {
+    feedback = 'Quiz terminated.';
+    alert(feedback);
+    return;
+  }
   if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
     feedback = 'Correct!';
     score += 1;
@@ -236,6 +221,35 @@ function showScore() {
   document.getElementById('score').style.display = 'block';
   document.getElementById('score').textContent = 'Your score is: ' + score;
 }
+
+function speak(text) {
+  if (isSpeechSupported) {
+    var utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.5;
+    synth.speak(utterance);
+  } else {
+    alert("Your device/browser doesn't support speech synthesis. Please enter your answer manually.");
+  }
+}
+
+
+function speak(text) {
+  if (isSpeechSupported) {
+    var words = text.split(' ').slice(0, 15).join(' '); // Limit to 15 words
+    var utterance = new SpeechSynthesisUtterance(words);
+    utterance.rate = 0.5;
+    synth.speak(utterance);
+  } else {
+    alert("Your device/browser doesn't support speech synthesis. Please enter your answer manually.");
+  }
+}
+
+
+
+
+
+
+
 </script>
 </body>
 </html>
