@@ -229,6 +229,58 @@ function showScore() {
   document.getElementById('score').style.display = 'block';
   document.getElementById('score').textContent = 'Your score is: ' + score;
 }
+
+
+
+
+// At the end of the `startQuiz()` function:
+function startQuiz() {
+  document.getElementById('start').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  loadGameData(); // Load game data from local storage
+}
+
+// Function to load game data from local storage
+function loadGameData() {
+  var savedDefinitions = localStorage.getItem('definitions');
+  var savedAnswers = localStorage.getItem('answers');
+  var savedScore = localStorage.getItem('score');
+
+  if (savedDefinitions && savedAnswers) {
+    definitions = JSON.parse(savedDefinitions);
+    answers = JSON.parse(savedAnswers);
+    showNextQuestion(); // Show the first question
+  } else {
+    // If no saved data, generate questions as before
+    generateQuestions();
+  }
+
+  if (savedScore) {
+    score = parseInt(savedScore);
+    document.getElementById('score').textContent = 'Your score is: ' + score;
+  }
+}
+
+// Inside the `checkAnswer()` function, after updating the score:
+// Save the updated score to local storage
+localStorage.setItem('score', score);
+
+// Inside the `resetScore()` function:
+// Remove score from local storage
+localStorage.removeItem('score');
+
+// Inside the `resetQuiz()` function, after removing definitions and answers:
+// Remove score from local storage
+localStorage.removeItem('score');
+
+
+
+
+
+
+
+
+  
 </script>
 </body>
 </html>
