@@ -7,19 +7,17 @@
 <style>
 body {
   font-family: Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
-  padding: 20px;
 }
 
 .container {
-  max-width: 100%;
+  max-width: 600px;
   margin: 0 auto;
+  padding: 20px;
   text-align: center;
 }
 
 h1 {
-  color: #fff;
+  color: #333;
 }
 
 label {
@@ -29,13 +27,13 @@ label {
 }
 
 input[type="text"] {
-  width: 80%;
+  width: 100%;
   padding: 8px;
   margin-bottom: 10px;
 }
 
 button {
-  padding: 14px 28px;
+  padding: 10px 20px;
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -64,36 +62,38 @@ button:hover {
 }
 </style>
 </head>
-<body>
+<body background="images/background.jpg">
 <div class="container">
-  <h1>Dark Ash Quiz Game</h1>
-  <div id="start">
+  <h1 style="color: #fff;">Dark Ash Quiz Game</h1>
+  <div style="color:#fff;" id="start">
     <button onclick="startQuiz()">Start Quiz</button>
   </div>
   <div id="quiz" style="display:none;">
-    <div id="currentQuestion"></div>
-    <button onclick="editQuestion()">Edit Question</button>
-    <label for="answer">Enter your answer:</label>
+    <div style="color: #fff;" id="currentQuestion"></div>
+    <button onclick="editQuestion()">Edit Question</button> <!-- New button for editing question -->
+    <label for="answer" style="color: #fff;">Enter your answer:</label>
     <input type="text" id="answer">
     <button onclick="checkAnswer()">Submit Answer</button>
     <div id="feedback"></div>
     <button onclick="resetQuiz()">Reset Quiz</button>
-    <button onclick="resetScore()">Reset Score</button>
+    <button onclick="resetScore()">Reset Score</button> <!-- New button for resetting score -->
     <button onclick="reAnswerQuestions()">Re-answer & Re-play</button>
     <button onclick="showScore()">Show Score</button>
-    <div id="score" style="display:none;"></div>
+    <div id="score" style="display:none;  color: #fff;"></div>
   </div>
 </div>
 <script>
 var currentQuestionIndex = 0;
 var definitions = [];
 var answers = [];
+var synth = window.speechSynthesis; // Initialize speech synthesis
 var score = 0;
+var isSpeechSupported = window.SpeechSynthesisUtterance !== undefined;
 
 function startQuiz() {
   document.getElementById('start').style.display = 'none';
   document.getElementById('quiz').style.display = 'block';
-  generateQuestions();
+  generateQuestions(); // Start quiz by generating questions
 }
 
 function generateQuestions() {
@@ -103,7 +103,7 @@ function generateQuestions() {
   if (savedDefinitions && savedAnswers) {
     definitions = JSON.parse(savedDefinitions);
     answers = JSON.parse(savedAnswers);
-    showNextQuestion();
+    showNextQuestion(); // Show the first question
   } else {
     var numQuestions = parseInt(prompt('Enter the number of definitions you want to be questioned on:'));
     for (var i = 0; i < numQuestions; i++) {
@@ -112,27 +112,36 @@ function generateQuestions() {
       definitions.push(definition);
       answers.push(answer);
     }
+    // Save questions and answers to local storage
     localStorage.setItem('definitions', JSON.stringify(definitions));
     localStorage.setItem('answers', JSON.stringify(answers));
-    showNextQuestion();
+    showNextQuestion(); // Show the first question
   }
 }
 
 function showNextQuestion() {
   var question = generateQuestionFromDefinition(definitions[currentQuestionIndex]);
-  document.getElementById('currentQuestion').innerHTML = question;
+  document.getElementById('currentQuestion').innerHTML = question; // Set innerHTML of div
+  speak(question); // Speak the question
 }
 
 function generateQuestionFromDefinition(definition) {
+  // Split definition into words
   var words = definition.trim().split(/\s+/);
+  // Shuffle words randomly
   words.sort(function() { return 0.5 - Math.random() });
+  // Take first 14 words or less to leave room for "What?"
   var truncatedWords = words.slice(0, 14);
+  // Join the words back into a sentence
   var question = truncatedWords.join(' ');
+  // Ensure the question starts with "What"
   if (!question.startsWith("What")) {
     question = "What " + question;
   }
+  // Add question mark at the end
   question += " ?";
   
+  // Add multiple-choice options
   var options = [answers[currentQuestionIndex]];
   while (options.length < 4) {
     var randomWord = words[Math.floor(Math.random() * words.length)];
@@ -154,7 +163,17 @@ function editQuestion() {
   var newQuestion = prompt('Edit the question:', definitions[currentQuestionIndex]);
   if (newQuestion !== null && newQuestion.trim() !== '') {
     definitions[currentQuestionIndex] = newQuestion.trim();
-    showNextQuestion();
+    showNextQuestion(); // Update the displayed question
+  }
+}
+
+function speak(text) {
+  if (isSpeechSupported) {
+    var utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.5;
+    synth.speak(utterance);
+  } else {
+    alert("Your device/browser doesn't support speech synthesis. Please enter your answer manually.");
   }
 }
 
@@ -168,41 +187,45 @@ function checkAnswer() {
   } else {
     feedback = 'Incorrect. The correct answer is: ' + correctAnswer;
     score -= 2;
-    if (score < 0) score = 0;
+    if (score < 0) score = 0; // Ensure score doesn't go negative
   }
+  speak(feedback); // Speak the feedback
   document.getElementById('feedback').textContent = feedback;
+  
+  // Save the score to local storage
   localStorage.setItem('score', score);
   
   currentQuestionIndex++;
   if (currentQuestionIndex < definitions.length) {
-    setTimeout(showNextQuestion, 3000);
+    setTimeout(showNextQuestion, 3000); // Show the next question after a delay of 3 seconds
   } else {
     setTimeout(function() {
+      synth.cancel(); // Stop speech synthesis
       alert('You have completed the quiz!');
-    }, 4000);
+    }, 4000); // Wait for 4 seconds before showing the alert
   }
 }
 
 function resetQuiz() {
   localStorage.removeItem('definitions');
   localStorage.removeItem('answers');
-  localStorage.removeItem('score');
+  localStorage.removeItem('score'); // Remove score from local storage
   currentQuestionIndex = 0;
   definitions = [];
   answers = [];
   score = 0;
-  startQuiz();
+  startQuiz(); // Restart the quiz
 }
 
 function resetScore() {
-  localStorage.removeItem('score');
+  localStorage.removeItem('score'); // Remove score from local storage
   score = 0;
   document.getElementById('score').textContent = 'Your score is: ' + score;
 }
 
 function reAnswerQuestions() {
   currentQuestionIndex = 0;
-  showNextQuestion();
+  showNextQuestion(); // Start re-answering questions from the beginning
 }
 
 function showScore() {
