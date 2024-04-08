@@ -7,6 +7,86 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="images/Ash.png">
+
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+        }
+        
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          text-align: center;
+        }
+        
+        h1 {
+          color: #333;
+        }
+        
+        label {
+          font-size: 18px;
+          margin-bottom: 10px;
+          display: block;
+        }
+        
+        input[type="text"] {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 10px;
+        }
+        
+        button {
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          cursor: pointer;
+          font-size: 16px;
+          margin-top: 10px;
+        }
+        
+        button:hover {
+          background-color: #0056b3;
+        }
+        
+        #question {
+          margin-top: 20px;
+          text-align: left;
+        }
+        
+        #feedback {
+          margin-top: 20px;
+          font-weight: bold;
+          color: #fff;
+        }
+        
+        #score {
+          margin-top: 20px;
+          font-size: 24px;
+        }
+        </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
 <body background="images/background.jpg">
 
@@ -17,8 +97,10 @@
 <input style="position:relative; top: 23vh; left: 10vw;" type="number" id="numQuestions">
 <button style="position:relative; top: 23vh; left: 10vw;" onclick="startQuiz()">Start Quiz</button>
 
-<div style="color: white; position: relative; left: 25vw; top: 35vh;" id="quiz">
-    <button onclick="addQuestion()">Add Question and Answer</button>
+
+<br>  <br>
+<div style="color: white; position: relative; left: 25vw; top: 21vh;" id="quiz">
+    <button onclick="addQuestion()">Add Question and Answer</button>  <br>
 </div>
 
 <script>
@@ -301,11 +383,11 @@ function decreaseScoreByAmount() {
 
 </script>
 
-<button style="position:relative; top: 23vh; left: 10vw;" onclick="eraseScore()">Reset Score</button>
-<button style="position:relative; top: 24vh; left: 10vw;" onclick="showScore()">Show Score</button>
-<button style="position:relative; top: 26vh; left: 10vw;"   onclick="transferToNewPage()">Transfer Questions and Answers</button>
-<button style="position:relative; top: 30vh; left: 20vw;"         onclick="editCurrentQuestion()">Edit Current Question and Answer</button>
-<button style="position:relative; top: 35vh; left: -20vw;"   onclick="deleteHistory()"          >delete all history</button>
+<button style="position:relative; top: 23vh; left: 10vw;" onclick="eraseScore()">Reset Score</button> <br>
+<button style="position:relative; top: 24vh; left: 10vw;" onclick="showScore()">Show Score</button><br>
+<button style="position:relative; top: 26vh; left: 10vw;"   onclick="transferToNewPage()">Transfer Questions and Answers</button><br>
+<button style="position:relative; top: 30vh; left: 20vw;"         onclick="editCurrentQuestion()">Edit Current Question and Answer</button><br>
+<button style="position:relative; top: 35vh; left: 10vw;"   onclick="deleteHistory()"          >delete all history</button><br>
 <button style="position:relative; top: 40vh; left: 20vw;"   onclick="decreaseScoreByAmount()"       >decrease your score</button>
 
 
