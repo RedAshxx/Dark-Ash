@@ -65,10 +65,21 @@ button:hover {
 </head>
 <body background="images/background.jpg">
 
-  <button style="position:relative; top: 500px; left: 50px;" onclick="resetAllData()">Reset All Data</button>
-  <button style="position:relative; top: 500px; left: 40px;" onclick="editQuestionAnswer()">Edit Question & Answer</button>
- 
 
+<!-- Display to show current speech rate -->
+<div id="speechRateDisplay" style="position: fixed; bottom: 20px; left: 20px;">Speech Rate: 1.0x</div>
+
+
+
+
+
+  <button style="position:relative; top: 500px; left: 50px;" onclick="resetAllData()">Reset All Data</button> <br>
+  <button style="position:relative; top: 500px; left: 40px;" onclick="editQuestionAnswer()">Edit Question & Answer</button>  <br> 
+  <button style="position:relative; top: 500px; left: 30px;" onclick="openQuestionAnswer()">Open Question & Answer</button> <br>
+  <button style="position:relative; top: 500px; left: 20px;" onclick="increaseSpeechRate()">increaseSpeechRate</button> <br>
+<button style="position:relative; top: 500px; left: 20px;" onclick="decreaseSpeechRate() ">Decrease Speech Rate</button>
+  
+  
 <div class="container">
   <h1 style="color: #fff;">Dark Ash Quiz Game</h1>
   <div style="color:#fff;" id="start">
@@ -273,6 +284,125 @@ function addQuestionAnswer() {
   localStorage.setItem('answers', JSON.stringify(answers));
   alert('Question and answer added successfully!');
 }
+
+function openQuestionAnswer() {
+  var qaContent = "<h2>Question & Answer</h2>";
+  for (var i = 0; i < definitions.length; i++) {
+    qaContent += "<p><strong>Question:</strong> " + definitions[i] + "</p>";
+    qaContent += "<p><strong>Answer:</strong> " + answers[i] + "</p>";
+  }
+  var newWindow = window.open();
+  newWindow.document.write(qaContent);
+}
+
+// Function to save data to local browser storage
+function saveToLocalStorage(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+// Function to retrieve data from local browser storage
+function getFromLocalStorage(key) {
+    return JSON.parse(localStorage.getItem(key));
+}
+
+// Function to save data to APK storage
+function saveToAPKStorage(key, data) {
+    // Implement saving data to APK storage here (e.g., using Android's file system APIs)
+    // This part would require using JavaScript libraries specific to Android development
+    // For demonstration purposes, let's assume a placeholder function
+    console.log("Data saved to APK storage:", data);
+}
+
+// Function to retrieve data from APK storage
+function getFromAPKStorage(key) {
+    // Implement retrieving data from APK storage here
+    // This part would require using JavaScript libraries specific to Android development
+    // For demonstration purposes, let's assume a placeholder function
+    console.log("Data retrieved from APK storage for key:", key);
+    return null; // Placeholder return value
+}
+
+// Function to save data to both local browser storage and APK storage
+function saveData(key, data) {
+    saveToLocalStorage(key, data);
+    saveToAPKStorage(key, data);
+}
+
+// Function to retrieve data from either local browser storage or APK storage
+function getData(key) {
+    var data = getFromLocalStorage(key);
+    if (data === null) {
+        data = getFromAPKStorage(key);
+    }
+    return data;
+}
+
+// Function to start speech recognition
+function startSpeechRecognition() {
+  if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.onresult = function(event) {
+      var userAnswer = event.results[0][0].transcript;
+      handleSpeechResult(userAnswer);
+    };
+    recognition.start();
+  } else {
+    alert("Speech recognition is not supported on this device.");
+  }
+}
+
+// Function to handle speech recognition result
+function handleSpeechResult(result) {
+  checkAnswer(result);
+}
+
+
+// Initialize speech synthesis
+var synth = window.speechSynthesis;
+var isSpeechSupported = window.SpeechSynthesisUtterance !== undefined;
+
+// Display element to show current speech rate
+var speechRateDisplay = document.getElementById('speechRateDisplay');
+
+// Function to increase speech rate
+function increaseSpeechRate() {
+  // Increment the speech rate by 0.1
+  if (synth) {
+    var newRate = synth.rate + 0.1;
+    if (newRate <= 2.0) { // Limit maximum rate to 2.0
+      synth.rate = newRate;
+      updateSpeechRateDisplay();
+    }
+  }
+}
+
+// Function to decrease speech rate
+function decreaseSpeechRate() {
+  // Decrement the speech rate by 0.1
+  if (synth) {
+    var newRate = synth.rate - 0.1;
+    if (newRate >= 0.1) { // Limit minimum rate to 0.1
+      synth.rate = newRate;
+      updateSpeechRateDisplay();
+    }
+  }
+}
+
+// Function to update speech rate display
+function updateSpeechRateDisplay() {
+  if (synth) {
+    speechRateDisplay.textContent = 'Speech Rate: ' + synth.rate.toFixed(1) + 'x';
+  }
+}
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>
