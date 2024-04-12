@@ -73,26 +73,26 @@ button:hover {
 
 
 
-  <button style="position:relative; top: 500px; left: 50px;" onclick="resetAllData()">Reset All Data</button> <br>
-  <button style="position:relative; top: 500px; left: 40px;" onclick="editQuestionAnswer()">Edit Question & Answer</button>  <br> 
-  <button style="position:relative; top: 500px; left: 30px;" onclick="openQuestionAnswer()">Open Question & Answer</button> <br>
-  <button style="position:relative; top: 500px; left: 20px;" onclick="increaseSpeechRate()">increaseSpeechRate</button> <br>
-<button style="position:relative; top: 500px; left: 20px;" onclick="decreaseSpeechRate() ">Decrease Speech Rate</button>
+  <button style="position:relative; top: 100px; left: 50px;" onclick="resetAllData()">Reset All Data</button> <br>
+  <button style="position:relative; top: 100px; left: 40px;" onclick="editQuestionAnswer()">Edit Question & Answer</button>  <br> 
+  <button style="position:relative; top: 570px; left: 30px;" onclick="openQuestionAnswer()">Open Question & Answer</button> <br>
+  <button style="position:relative; top: 575px; left: 20px;" onclick="increaseSpeechRate()">increase Speech Rate</button> <br>
+<button style="position:relative; top: 580px; left: 20px;" onclick="decreaseSpeechRate() ">Decrease Speech Rate</button>
   
   
 <div class="container">
-  <h1 style="color: #fff;">Dark Ash Quiz Game</h1>
+  <h1 style="color: #fff;">Dark Ash Quiz Game</h1> <br>
   <div style="color:#fff;" id="start">
     <button onclick="startQuiz()">Start Quiz</button>
   </div>
   <div id="quiz" style="display:none;">
     <div style="color: #fff;" id="currentQuestion"></div>
     <div id="feedback"></div>
-    <button onclick="resetQuiz()">Reset Quiz</button>
-    <button onclick="resetScore()">Reset Score</button>
-    <button onclick="reAnswerQuestions()">Re-answer & Re-play</button>
-    <button onclick="showScore()">Show Score</button>
-    <button onclick="addQuestionAnswer()">Add Question & Answer</button>
+    <button onclick="resetQuiz()">Reset Quiz</button> <br>
+    <button onclick="resetScore()">Reset Score</button>  <br>
+    <button onclick="reAnswerQuestions()">Re-answer & Re-play</button> <br>
+    <button onclick="showScore()">Show Score</button> <br>
+    <button onclick="addQuestionAnswer()">Add Question & Answer</button> <br>
     <div id="score" style="display:none;  color: #fff;"></div>
   </div>
 </div>
@@ -235,8 +235,8 @@ function showScore() {
   if (savedScore) {
     score = parseInt(savedScore);
   }
-  document.getElementById('score').style.display = 'block';
-  document.getElementById('score').textContent = 'Your score is: ' + score;
+  
+  document.getElementById('score').textContent = 'Your score is: ' +   alert( score) ;
 }
 
 function speak(text) {
